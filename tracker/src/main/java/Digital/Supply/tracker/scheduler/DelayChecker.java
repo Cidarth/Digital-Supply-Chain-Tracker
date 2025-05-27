@@ -4,8 +4,8 @@ import Digital.Supply.tracker.entity.Alert;
 import Digital.Supply.tracker.entity.Shipment;
 import Digital.Supply.tracker.repository.AlertRepository;
 import Digital.Supply.tracker.repository.ShipmentRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -13,16 +13,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
+@Slf4j
+@RequiredArgsConstructor
 public class DelayChecker {
 
     private final ShipmentRepository shipmentRepo;
     private final AlertRepository alertRepo;
-    private static final Logger log = LoggerFactory.getLogger(DelayChecker.class);
-
-    public DelayChecker(ShipmentRepository shipmentRepo, AlertRepository alertRepo) {
-        this.shipmentRepo = shipmentRepo;
-        this.alertRepo = alertRepo;
-    }
 
     @Scheduled(fixedRate = 300000)
     public void checkForDelayedShipments() {
