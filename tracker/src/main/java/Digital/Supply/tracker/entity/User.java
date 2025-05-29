@@ -14,18 +14,5 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    public enum Role {
-        ADMIN,
-        SUPPLIER,
-        TRANSPORTER,
-        MANAGER;
-
-        public String toUpperCase() {
-            return name();
-        }
-    }
+    private String role; // ADMIN, SUPPLIER, TRANSPORTER, MANAGER
 }

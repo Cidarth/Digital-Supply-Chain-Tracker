@@ -3,7 +3,6 @@ package Digital.Supply.tracker.service;
 import Digital.Supply.tracker.dto.UserDto;
 import Digital.Supply.tracker.entity.User;
 import Digital.Supply.tracker.exception.EmailAlreadyExistsException;
-import Digital.Supply.tracker.exception.InvalidRoleException;
 import Digital.Supply.tracker.repository.UserRepository;
 import Digital.Supply.tracker.regexValidation.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +14,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Autowired private UserRepository userRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     public void registerUser(UserDto userDto) {
         if (!ValidationUtils.isValidEmail(userDto.getEmail())) {
@@ -27,18 +24,14 @@ public class UserService {
         if (!ValidationUtils.isValidPassword(userDto.getPassword())) {
             throw new IllegalArgumentException("Invalid Password! Password criteria not matched.");
         }
-        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()){
             throw new EmailAlreadyExistsException("User already exists. Please Login");
         }
-
         User user = new User();
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
-        // Safely convert role string to enum
-        user.setRole(parseRole(userDto.getRole()));
-
+        user.setRole(userDto.getRole());
         userRepository.save(user);
     }
 
@@ -48,7 +41,7 @@ public class UserService {
 
     public void updateUserRole(Long id, String role) {
         User user = userRepository.findById(id).orElseThrow();
-        user.setRole(parseRole(role));
+        user.setRole(role);
         userRepository.save(user);
     }
 
@@ -56,16 +49,7 @@ public class UserService {
         UserDto dto = new UserDto();
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
-        dto.setRole(user.getRole().name()); // return enum name as string
+        dto.setRole(user.getRole());
         return dto;
     }
-
-    private User.Role parseRole(String roleString) {
-        try {
-            return User.Role.valueOf(roleString.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new InvalidRoleException("Role not recognized. Try again with: ADMIN, SUPPLIER, TRANSPORTER, MANAGER");
-        }
-    }
 }
-

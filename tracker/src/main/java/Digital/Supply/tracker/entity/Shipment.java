@@ -26,9 +26,9 @@ public class Shipment {
 
     @ManyToOne
     @JoinColumn(name = "assigned_transporter_id", nullable = true)
-    private User assignedTransporter;
+    private User assignedTransporter; // This field is nullable!
 
     public enum Status {
-        CREATED, IN_TRANSIT, DELIVERED, PENDING, SHIPPED, DELAYED
+        CREATED, IN_TRANSIT, DELIVERED, DELAYED
     }
 }

@@ -24,15 +24,15 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                        .requestMatchers("/api/users/**").hasRole("ADMIN")
-                        .requestMatchers("/api/items/**").hasAnyRole("ADMIN", "SUPPLIER")
-                        .requestMatchers("/api/shipments/**").hasAnyRole("ADMIN", "SUPPLIER", "TRANSPORTER", "MANAGER")
-                        .requestMatchers("/api/checkpoints/**").hasAnyRole("TRANSPORTER", "MANAGER")
-                        .requestMatchers("/api/alerts/**").hasRole("ADMIN")
-                        .requestMatchers("/api/reports/**").hasRole("ADMIN")
+                        .requestMatchers("/api/users/").hasRole("ADMIN")
+                        .requestMatchers("/api/items/").hasAnyRole("ADMIN", "SUPPLIER")
+                        .requestMatchers("/api/shipments/").hasAnyRole("ADMIN", "SUPPLIER", "TRANSPORTER", "MANAGER")
+                        .requestMatchers("/api/checkpoints/").hasAnyRole("TRANSPORTER", "MANAGER")
+                        .requestMatchers("/api/alerts/").hasRole("ADMIN")
+                        .requestMatchers("/api/reports/").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .httpBasic();
+                .httpBasic(); // or use .formLogin() if you want a login page
 
         return http.build();
     }
@@ -47,11 +47,10 @@ public class SecurityConfig {
         return username -> {
             User user = userRepository.findByEmail(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-
             return org.springframework.security.core.userdetails.User
                     .withUsername(user.getEmail())
                     .password(user.getPassword())
-                    .roles(user.getRole().toUpperCase()) // Ensure string format
+                    .roles(user.getRole()) // make sure user.getRole() returns role name without "ROLE_" prefix
                     .build();
         };
     }
@@ -60,5 +59,4 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
 }
