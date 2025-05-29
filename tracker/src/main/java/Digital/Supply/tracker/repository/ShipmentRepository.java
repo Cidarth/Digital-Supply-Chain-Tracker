@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ShipmentRepository extends JpaRepository<Shipment, Long> {
     List<Shipment> findByCurrentStatus(Digital.Supply.tracker.entity.Shipment.Status status);
+
 }
