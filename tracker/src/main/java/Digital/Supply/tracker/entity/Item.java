@@ -7,15 +7,15 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckpointLog {
+public class Item {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
+    private String category;
 
     @ManyToOne
-    @JoinColumn(name = "shipment_id")
-    private Shipment shipment;
+    @JoinColumn(name = "supplier_id")
+    private User supplier;
 
-    private String location;
-    private String status; // RECEIVED, IN_TRANSIT, DAMAGED, DELIVERED
-    private String timestamp;
+    private String createdDate;
 }
