@@ -25,7 +25,8 @@ public class DelayChecker {
         List<Shipment> pendingShipments = shipmentRepo.findByCurrentStatusNot("DELIVERED");
 
         for (Shipment shipment : pendingShipments) {
-            if (shipment.getExpectedDelivery() != null && shipment.getExpectedDelivery().isBefore(LocalDateTime.now())) {
+            if (shipment.getExpectedDelivery() != null && 
+                LocalDateTime.parse(shipment.getExpectedDelivery()).isBefore(LocalDateTime.now())) {
                 boolean alreadyAlerted = alertRepo.existsByShipmentIdAndTypeAndResolvedFalse(
                         shipment.getId(), "DELAY");
 
@@ -34,7 +35,7 @@ public class DelayChecker {
                     alert.setShipment(shipment);
                     alert.setType("DELAY");
                     alert.setMessage("Shipment delayed beyond expected time.");
-                    alert.setCreatedOn(LocalDateTime.now());
+                    alert.setCreatedOn(LocalDateTime.now().toString());
                     alert.setResolved(false);
 
                     alertRepo.save(alert);

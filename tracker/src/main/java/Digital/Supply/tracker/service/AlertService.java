@@ -1,29 +1,48 @@
 package Digital.Supply.tracker.service;
 
+import Digital.Supply.tracker.dto.AlertDto;
 import Digital.Supply.tracker.entity.Alert;
+import Digital.Supply.tracker.entity.Shipment;
 import Digital.Supply.tracker.repository.AlertRepository;
-import lombok.RequiredArgsConstructor;
+import Digital.Supply.tracker.repository.ShipmentRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class AlertService {
 
-    private final AlertRepository alertRepo;
+    @Autowired
+    private AlertRepository alertRepository;
 
+    @Autowired
+    private ShipmentRepository shipmentRepository;
+
+    // Create a new alert
+    public Alert addAlert(AlertDto dto) {
+        Shipment shipment = shipmentRepository.findById(dto.getShipmentId())
+                .orElseThrow(() -> new EntityNotFoundException("Shipment not found with id: " + dto.getShipmentId()));
+        Alert alert = new Alert();
+        alert.setShipment(shipment);
+        alert.setType(dto.getType());
+        alert.setMessage(dto.getMessage());
+        alert.setCreatedOn(java.time.LocalDate.now().toString());
+        alert.setResolved(false);
+        return alertRepository.save(alert);
+    }
+
+    // List all alerts
     public List<Alert> getAllAlerts() {
-        return alertRepo.findAll();
+        return alertRepository.findAll();
     }
 
-    public Alert resolveAlert(Long id) {
-        Alert alert = alertRepo.findById(id).orElseThrow();
+    // Resolve an alert by ID
+    public void resolveAlert(Long id) {
+        Alert alert = alertRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Alert not found with id: " + id));
         alert.setResolved(true);
-        return alertRepo.save(alert);
-    }
-
-    public Alert createAlert(Alert alert) {
-        return alertRepo.save(alert);
+        alertRepository.save(alert);
     }
 }
