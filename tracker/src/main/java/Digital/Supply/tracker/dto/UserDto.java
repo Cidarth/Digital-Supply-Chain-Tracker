@@ -1,4 +1,3 @@
-// UserRegisterRequest.java
 package Digital.Supply.tracker.dto;
 
 import lombok.Data;

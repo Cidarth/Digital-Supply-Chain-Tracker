@@ -24,10 +24,9 @@ public class UserService {
         if (!ValidationUtils.isValidPassword(userDto.getPassword())) {
             throw new IllegalArgumentException("Invalid Password! Password criteria not matched.");
         }
-        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
-            throw new EmailAlreadyExistsException("User already exists. Please login");
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()){
+            throw new EmailAlreadyExistsException("User already exists. Please Login");
         }
-
         User user = new User();
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
