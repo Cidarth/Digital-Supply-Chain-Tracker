@@ -29,6 +29,6 @@ public class Shipment {
     private User assignedTransporter; // This field is nullable!
 
     public enum Status {
-        CREATED, IN_TRANSIT, DELIVERED, DELAYED
+        CREATED, IN_TRANSIT, DELIVERED, PENDING, SHIPPED, DELAYED
     }
 }

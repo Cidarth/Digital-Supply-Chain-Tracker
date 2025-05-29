@@ -20,36 +20,20 @@ public class AlertController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','SUPPLIER','TRANSPORTER','MANAGER')")
     public Alert addAlert(@RequestBody AlertDto alertDto) {
-        try {
-            return alertService.addAlert(alertDto);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to add alert: " + e.getMessage());
-        }
+        return alertService.addAlert(alertDto);
     }
 
     // Get all alerts
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public List<Alert> getAlerts() {
-        try {
-            return alertService.getAllAlerts();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to retrieve alerts: " + e.getMessage());
-        }
-      //  return alertService.getAllAlerts();
+        return alertService.getAllAlerts();
     }
 
     // Resolve an alert by ID
     @PutMapping("/{id}/resolve")
     @PreAuthorize("hasRole('ADMIN')")
     public String resolveAlert(@PathVariable Long id) {
-        try {
-            if (id == null) {
-                throw new IllegalArgumentException("Alert ID cannot be null");
-            }
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid alert ID: " + e.getMessage());
-        }
         alertService.resolveAlert(id);
         return "Alert resolved";
     }

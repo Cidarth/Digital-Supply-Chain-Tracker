@@ -19,4 +19,8 @@ public class Alert {
     private String message;
     private String createdOn;
     private Boolean resolved;
+
+    public boolean isResolved() {
+        return false;
+    }
 }
