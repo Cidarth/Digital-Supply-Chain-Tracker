@@ -15,13 +15,13 @@ public class CheckpointLogController {
     @Autowired private CheckpointLogService checkpointLogService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('TRANSPORTER','MANAGER','ADMIN')")
+    @PreAuthorize("hasAnyRole('TRANSPORTER','ADMIN','MANAGER')")
     public CheckpointLog addCheckpoint(@RequestBody CheckpointLogDto dto) {
         return checkpointLogService.addCheckpoint(dto);
     }
 
     @GetMapping("/shipment/{id}")
-    @PreAuthorize("hasAnyRole('TRANSPORTER','MANAGER','ADMIN')")
+    @PreAuthorize("hasAnyRole('TRANSPORTER','ADMIN','MANAGER')")
     public List<CheckpointLog> getCheckpoints(@PathVariable Long id) {
         return checkpointLogService.getCheckpointsByShipment(id);
     }
