@@ -262,7 +262,7 @@ Monitor console logs for real-time updates and debugging.
 ---
 
 ## 👥 Authors
-**Cidarth Narayan** – Project Lead & Backend Developer
+**Cidarth Narayan J** – Project Lead & Backend Developer
 
 **Rick Brenton** – Item and Shipment Tracking & Testing
 
